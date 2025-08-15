@@ -1,7 +1,7 @@
 package avel.session.service
 
 import avel.session.service.SessionService._
-import cats.effect.{IO, Sync}
+import cats.effect.{Sync}
 import cats.implicits._
 import org.http4s.HttpRoutes
 import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
@@ -33,11 +33,11 @@ object SessionServiceRoutes {
     }
   }
 
-  def sessionServiceRoutes(service: SessionService): HttpRoutes[IO] = {
-    val dsl = new Http4sDsl[IO]{}
+  def sessionServiceRoutes[F[_]: Sync](service: SessionService[F]): HttpRoutes[F] = {
+    val dsl = new Http4sDsl[F]{}
     import dsl._
 
-    HttpRoutes.of[IO] {
+    HttpRoutes.of[F] {
       case GET -> Root / "session" / sessionId =>
         for {
           sessionState <- service.getState( Session(sessionId))
