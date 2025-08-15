@@ -1,23 +1,23 @@
 package avel.session.service
 
 import avel.session.service.SessionService.SessionState
-import cats.effect.Async
+import cats.effect.kernel.Ref
 import com.comcast.ip4s._
-import fs2.io.net.Network
 import org.http4s.ember.client.EmberClientBuilder
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits._
 import org.http4s.server.middleware.Logger
+import cats.effect.{IO}
 
 object SessionServer {
 
-  val state: Map[String, SessionState] = Map("56575-45456" -> SessionState(454))
+  val state: IO[Ref[IO, Map[String, SessionState]]] = Ref[IO].of(Map("56575-45456" -> SessionState(454)))
 
-  def run[F[_]: Async: Network]: F[Nothing] = {
+  def run: IO[Nothing] = {
     for {
-      _ <- EmberClientBuilder.default[F].build // TODO: drop this client later on
+      _ <- EmberClientBuilder.default[IO].build // TODO: drop this client later on
       //helloWorldAlg = HelloWorld.impl[F]
-      sessionService = SessionService.impl[F](state)
+      sessionService = SessionService.impl(state)
       //jokeAlg = Jokes.impl[F](client)
 
       // Combine Service Routes into an HttpApp.
@@ -26,7 +26,7 @@ object SessionServer {
       // in the underlying routes.
       httpApp = (
         //SessionserviceRoutes.helloWorldRoutes[F](helloWorldAlg) <+>
-        SessionServiceRoutes.sessionServiceRoutes[F](sessionService)
+        SessionServiceRoutes.sessionServiceRoutes(sessionService)
 //          <+> SessionServiceRoutes.jokeRoutes[F](jokeAlg)
       ).orNotFound
 
@@ -34,7 +34,7 @@ object SessionServer {
       finalHttpApp = Logger.httpApp(true, true)(httpApp)
 
       _ <- 
-        EmberServerBuilder.default[F]
+        EmberServerBuilder.default[IO]
           .withHost(ipv4"0.0.0.0")
           .withPort(port"8080")
           .withHttpApp(finalHttpApp)

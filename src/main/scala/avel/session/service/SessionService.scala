@@ -1,14 +1,14 @@
 package avel.session.service
 
 import avel.session.service.SessionService.{Session, SessionState}
-import cats.Applicative
-import cats.implicits.catsSyntaxApplicativeId
+import cats.effect.IO
+import cats.effect.kernel.Ref
 import io.circe.{Encoder, Json}
 import org.http4s.EntityEncoder
 import org.http4s.circe._
 
-trait SessionService[F[_]] {
-  def getState(session: Session): F[Option[SessionState]]
+trait SessionService {
+  def getState(session: Session): IO[Option[SessionState]]
 }
 
 object SessionService {
@@ -40,14 +40,16 @@ object SessionService {
   }
 
 
-  def impl[F[_]: Applicative](state: Map[String, SessionState]): SessionService[F] = new SessionService[F] {
-    override def getState(session: Session): F[Option[SessionState]] = {
-      state
+  def impl(state: IO[Ref[IO, Map[String, SessionState]]]): SessionService = new SessionService {
+    override def getState(session: Session): IO[Option[SessionState]] = {
+      for {
+        res <- state
+        x <- res.get
+      } yield x
         .collect {
           case (sessionId, stateFound) if sessionId == session.sessionId => stateFound
         }
         .headOption
-        .pure[F]
     }
   }
 }
