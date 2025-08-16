@@ -12,14 +12,14 @@ trait SessionService[F[_]] {
 }
 
 object SessionServiceImpl {
-  def make[F[_]: Sync: Logger](state : F[Ref[F, SessionState]]) : SessionService[F] = {
+  def make[F[_]: Sync: Logger] : SessionService[F] = {
+    val state : F[Ref[F, SessionState]] = Ref.of(SessionState(0))
     new SessionServiceImpl[F](state)
   }
 }
 
 // TODO: implement/pass Ref in some way
 class SessionServiceImpl[F[_]: Sync: Logger] private(state : F[Ref[F, SessionState]]) extends SessionService[F] {
-//  private val state : F[Ref[F, SessionState]] = Ref.of(SessionState(0))
 
   override def getState: F[SessionState] =  {
     Monad[F].flatMap(state){ ps =>
