@@ -22,11 +22,6 @@ final case class SessionRoutes[F[_]: Monad](
       val state = session.inc
       Ok(state)
     }
-
-    case GET -> Root / "log" => {
-      val l = session.log
-      Ok(l)
-    }
   }
 
   val routes: HttpRoutes[F] = Router(

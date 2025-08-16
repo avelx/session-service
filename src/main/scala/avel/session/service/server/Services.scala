@@ -2,15 +2,12 @@ package avel.session.service.server
 
 import avel.session.service.session.{SessionService, SessionServiceImpl}
 import cats.effect.kernel.Sync
-import org.typelevel.log4cats.Logger
 
 object Services {
-  def make[F[_]: Sync: Logger](): Services[F] = {
+  def make[F[_]: Sync](): Services[F] = {
     new Services[F]( // TODO: extend here by adding more services
       session = SessionServiceImpl.make[F],
-    ) {
-
-    }
+    ) {}
   }
 }
 
