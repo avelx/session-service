@@ -1,5 +1,7 @@
 package avel.session.service
 
+import java.util.UUID
+
 object models {
   import io.circe.{Encoder, Json}
   import org.http4s.EntityEncoder
@@ -8,7 +10,7 @@ object models {
 
   final case class Session(sessionId: String) extends AnyVal
 
-  final case class SessionState(counter: Int) extends AnyVal
+  final case class SessionState private(id: UUID, counter : Int)
 
 
   object Session {
@@ -23,6 +25,9 @@ object models {
   }
 
   object SessionState {
+    def apply(counter: Int) : SessionState = {
+      new SessionState(id = UUID.randomUUID(), counter = counter)
+    }
     implicit val sessionStateEncoder: Encoder[SessionState] = new Encoder[SessionState] {
       final def apply(a: SessionState): Json = Json.obj(
         ("state", Json.fromInt(a.counter)),

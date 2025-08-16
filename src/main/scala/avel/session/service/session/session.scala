@@ -1,23 +1,41 @@
 package avel.session.service.session
 
 import avel.session.service.models.SessionState
-import cats.effect.kernel.Sync
-import cats.implicits.catsSyntaxApplicativeId
+import cats.Monad
+import cats.effect.kernel.{Ref, Sync}
+import org.typelevel.log4cats.Logger
 
 trait SessionService[F[_]] {
   def getState: F[SessionState]
+  def inc: F[Unit]
+  def log: F[Unit]
 }
 
 object SessionServiceImpl {
-  def make[F[_]: Sync] : SessionService[F] = {
-    new SessionServiceImpl[F]( SessionState(0))
+  def make[F[_]: Sync: Logger](state : F[Ref[F, SessionState]]) : SessionService[F] = {
+    new SessionServiceImpl[F](state)
   }
 }
 
 // TODO: implement/pass Ref in some way
-class SessionServiceImpl[F[_]: Sync] private (state: SessionState) extends SessionService[F] {
+class SessionServiceImpl[F[_]: Sync: Logger] private(state : F[Ref[F, SessionState]]) extends SessionService[F] {
+//  private val state : F[Ref[F, SessionState]] = Ref.of(SessionState(0))
+
   override def getState: F[SessionState] =  {
-    val newState = state.copy(counter = state.counter + 1)
-    newState.pure[F]
+    Monad[F].flatMap(state){ ps =>
+       ps.get
+    }
+
+  }
+  override def inc: F[Unit] = {
+    Monad[F].flatMap(state) { ps =>
+      ps.update (s => SessionState(counter = s.counter + 5))
+    }
+  }
+
+  override def log: F[Unit] = {
+    Monad[F].flatMap(state) { ps =>
+      Logger[F].info(s"Current state: ${ps.get}")
+    }
   }
 }

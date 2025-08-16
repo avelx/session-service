@@ -1,12 +1,14 @@
 package avel.session.service.server
 
+import avel.session.service.models.SessionState
 import avel.session.service.session.{SessionService, SessionServiceImpl}
-import cats.effect.kernel.Sync
+import cats.effect.kernel.{Ref, Sync}
+import org.typelevel.log4cats.Logger
 
 object Services {
-  def make[F[_]: Sync]: Services[F] = {
+  def make[F[_]: Sync: Logger](state : F[Ref[F, SessionState]]): Services[F] = {
     new Services[F]( // TODO: extend here by adding more services
-      session = SessionServiceImpl.make[F],
+      session = SessionServiceImpl.make[F](state),
     ) {
 
     }

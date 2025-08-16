@@ -19,6 +19,7 @@ lazy val root = (project in file("."))
       "org.scalameta"   %% "munit"               % MunitVersion           % Test,
       "org.typelevel"   %% "munit-cats-effect"   % MunitCatsEffectVersion % Test,
       "ch.qos.logback"  %  "logback-classic"     % LogbackVersion         % Runtime,
+      "org.typelevel"       %% "log4cats-noop"      % "2.3.1"
     ),
     addCompilerPlugin("org.typelevel" %% "kind-projector"     % "0.13.3" cross CrossVersion.full),
     addCompilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1"),
@@ -27,3 +28,5 @@ lazy val root = (project in file("."))
       case x => (assembly / assemblyMergeStrategy).value.apply(x)
     }
   )
+
+Compile / run / fork := true
