@@ -7,12 +7,10 @@ import cats.syntax.all._
 
 trait SessionService[F[_]] {
   def getState: F[SessionState]
-  def inc: F[Unit]
-  //def log: F[Unit]
+  def inc: F[SessionState]
 }
 
 object SessionServiceImpl {
-  //implicit def logger[F[_]: Sync]: Logger[F] = Slf4jLogger.getLogger[F]
 
   def make[F[_]: Sync] : SessionService[F] = {
     val state : F[Ref[F, SessionState]] = Ref.of(SessionState(0))
@@ -33,19 +31,10 @@ class SessionServiceImpl[F[_]: Sync] private(state : F[Ref[F, SessionState]]) ex
       }
 
   }
-  override def inc: F[Unit] = {
-    val s = Monad[F].flatMap(state) { ps =>
-      ps.update (s => SessionState(counter = s.counter + 5))
+  override def inc: F[SessionState] = {
+    Monad[F].flatMap(state) { ps =>
+      ps.updateAndGet(x => SessionState(counter = x.counter + 1))
     }
-    s
   }
 
-//  override def log: F[Unit] = {
-//    Monad[F].flatMap(state) { ps =>
-//      Functor[F].map(ps.get){ value =>
-//              Logger[F].info(s"Here is actual value: ${value.toString}")
-//            } *>
-//      ().pure[F]
-//    }
-//  }
 }

@@ -10,7 +10,9 @@ object models {
 
   final case class Session(sessionId: String) extends AnyVal
 
-  final case class SessionState private(id: UUID, counter : Int)
+  final case class SessionState private(id: UUID, counter : Int) {
+    def incLocal: SessionState = SessionState(counter = this.counter + 1)
+  }
 
 
   object Session {
@@ -28,6 +30,8 @@ object models {
     def apply(counter: Int) : SessionState = {
       new SessionState(id = UUID.randomUUID(), counter = counter)
     }
+
+
     implicit val sessionStateEncoder: Encoder[SessionState] = new Encoder[SessionState] {
       final def apply(a: SessionState): Json = Json.obj(
         ("state", Json.fromInt(a.counter)),
