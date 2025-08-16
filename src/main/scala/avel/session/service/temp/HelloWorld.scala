@@ -1,4 +1,4 @@
-package avel.session.service
+package avel.session.service.temp
 
 import cats.Applicative
 import cats.implicits._

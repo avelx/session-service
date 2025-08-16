@@ -1,5 +1,6 @@
 package avel.session.service
 
+import avel.session.service.temp.HelloWorld
 import cats.effect.IO
 import org.http4s._
 import org.http4s.implicits._
