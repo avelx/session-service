@@ -17,6 +17,7 @@ object SessionServiceImpl {
 // TODO: implement/pass Ref in some way
 class SessionServiceImpl[F[_]: Sync] private (state: SessionState) extends SessionService[F] {
   override def getState: F[SessionState] =  {
-    state.pure[F]
+    val newState = state.copy(counter = state.counter + 1)
+    newState.pure[F]
   }
 }

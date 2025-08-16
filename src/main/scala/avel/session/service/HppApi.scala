@@ -1,9 +1,9 @@
 package avel.session.service
 
 import avel.session.service.routes.SessionRoutes
+import avel.session.service.server.Services
 import cats.effect.Sync
 import org.http4s.server.Router
-import org.http4s.server.middleware.{AutoSlash}
 import org.http4s.{HttpApp, HttpRoutes}
 
 
@@ -29,11 +29,11 @@ sealed abstract class HttpApi[F[_]: Sync] private (
   )
 
   // TODO: find out what this for
-  private val middleware: HttpRoutes[F] => HttpRoutes[F] = {
-    { http: HttpRoutes[F] =>
-      AutoSlash(http)
-    }
-  }
+//  private val middleware: HttpRoutes[F] => HttpRoutes[F] = {
+//    { http: HttpRoutes[F] =>
+//      AutoSlash(http)
+//    }
+//  }
 
   val httpApp: HttpApp[F] = routes.orNotFound
 }
