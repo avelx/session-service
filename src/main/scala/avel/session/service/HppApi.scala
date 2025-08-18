@@ -1,40 +1,29 @@
 package avel.session.service
 
-import avel.session.service.routes.SessionRoutes
-import avel.session.service.services.Services
+import avel.session.service.models.SessionStateCounter
+import avel.session.service.routes.SessionStateRoutes
 import cats.effect.Sync
 import org.http4s.server.Router
 import org.http4s.{HttpApp, HttpRoutes}
 
 object HttpApi {
   def make[F[_]: Sync](
-                         services: Services[F],
-                         state: Counter[F]
+                         state: SessionStateCounter[F]
                        ): HttpApi[F] =
-    new HttpApi[F](services, state) {}
+    new HttpApi[F](state) {}
 }
 
 sealed abstract class HttpApi[F[_]: Sync] private (
-                                                     services: Services[F],
-                                                     state: Counter[F]
+                                                     state: SessionStateCounter[F]
                                                    ) {
 
-  private val sessionRoute    = SessionRoutes[F](services.session, state).routes()
+  private val sessionRoute    = SessionStateRoutes[F](state).routes()
 
-  // Combining all the http routes
-  private val openRoutes: HttpRoutes[F] =
-    sessionRoute
+  private val openRoutes: HttpRoutes[F] = sessionRoute
 
   private val routes: HttpRoutes[F] = Router(
     "v1"            -> openRoutes,
   )
-
-  // TODO: find out what this for
-//  private val middleware: HttpRoutes[F] => HttpRoutes[F] = {
-//    { http: HttpRoutes[F] =>
-//      AutoSlash(http)
-//    }
-//  }
 
   val httpApp: HttpApp[F] = routes.orNotFound
 }

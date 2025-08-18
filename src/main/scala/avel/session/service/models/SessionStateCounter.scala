@@ -1,28 +1,30 @@
-package avel.session.service
+package avel.session.service.models
 
-import avel.session.service.models.SessionState
+import avel.session.service.SessionState
 import cats.Functor
-import cats.syntax.functor._
 import cats.effect.kernel.Ref
+import cats.syntax.functor._
 
-trait Counter[F[_]] {
+trait SessionStateCounter[F[_]] {
   def get: F[SessionState]
+
   def inc: F[Unit]
 }
 
 object CounterImpl {
 
-  def make[F[_] : Functor : Ref.Make]: F[Counter[F]] = {
+  def make[F[_] : Functor : Ref.Make]: F[SessionStateCounter[F]] = {
     Ref.of[F, SessionState](SessionState(0)).map { ref =>
-      new Counter[F] {
+      new SessionStateCounter[F] {
         def inc: F[Unit] = {
           ref.update(st => { // Use same sessionState object
-//            val res =
-              st.copy(counter = st.counter + 1)
+            //            val res =
+            st.copy(counter = st.counter + 1)
             //println(s"Current state: $res")
-//            res
+            //            res
           })
         }
+
         def get: F[SessionState] = ref.get
       }
     }
