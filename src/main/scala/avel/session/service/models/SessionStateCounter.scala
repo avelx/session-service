@@ -11,9 +11,9 @@ trait SessionStateCounter[F[_]] {
   def inc: F[Unit]
 }
 
-object SessionStateCounterImpl {
+object SessionStateCounter {
 
-  def make[F[_] : Sync : Ref.Make : Logger]: F[SessionStateCounter[F]] = {
+  def impl[F[_] : Sync : Ref.Make : Logger]: F[SessionStateCounter[F]] = {
     Ref.of[F, SessionState](SessionState(0)).map { ref =>
       new SessionStateCounter[F] {
 
