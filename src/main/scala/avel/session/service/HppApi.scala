@@ -6,19 +6,20 @@ import cats.effect.Sync
 import org.http4s.server.Router
 import org.http4s.{HttpApp, HttpRoutes}
 
-
 object HttpApi {
   def make[F[_]: Sync](
                          services: Services[F],
+                         state: F[Counter[F]]
                        ): HttpApi[F] =
-    new HttpApi[F](services) {}
+    new HttpApi[F](services, state) {}
 }
 
 sealed abstract class HttpApi[F[_]: Sync] private (
-                                                     services: Services[F]
+                                                     services: Services[F],
+                                                     state: F[Counter[F]]
                                                    ) {
 
-  private val sessionRoute    = SessionRoutes[F](services.session).routes
+  private val sessionRoute    = SessionRoutes[F](services.session, state).routes()
 
   // Combining all the http routes
   private val openRoutes: HttpRoutes[F] =

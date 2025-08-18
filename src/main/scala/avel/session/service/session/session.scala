@@ -5,9 +5,11 @@ import cats.{Functor, Monad}
 import cats.effect.kernel.{Ref, Sync}
 import cats.syntax.all._
 
+import scala.util.Random
+
 trait SessionService[F[_]] {
   def getState: F[SessionState]
-  def inc: F[SessionState]
+  def inc: F[Unit]
 }
 
 object SessionServiceImpl {
@@ -31,9 +33,9 @@ class SessionServiceImpl[F[_]: Sync] private(state : F[Ref[F, SessionState]]) ex
       }
 
   }
-  override def inc: F[SessionState] = {
+  override def inc: F[Unit] = {
     Monad[F].flatMap(state) { ps =>
-      ps.updateAndGet(x => SessionState(counter = x.counter + 1))
+      ps.set(SessionState(counter = Random.nextInt()))
     }
   }
 

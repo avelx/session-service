@@ -1,31 +1,33 @@
 package avel.session.service.routes
 
+import avel.session.service.Counter
 import avel.session.service.session.SessionService
-import cats.{Monad}
+import cats.effect.kernel.Sync
+import cats.implicits.{toFlatMapOps, toFunctorOps}
 import org.http4s.HttpRoutes
+import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 import org.http4s.dsl.Http4sDsl
 import org.http4s.server.Router
 
 
-final case class SessionRoutes[F[_]: Monad](
-                                           session: SessionService[F]
+final case class SessionRoutes[F[_]: Sync ](
+                                           session: SessionService[F],
+                                             state: F[Counter[F]]
                                          ) extends Http4sDsl[F] {
 
   private[routes] val prefixPath = "/session"
 
-  private val httpRoutes: HttpRoutes[F] = HttpRoutes.of[F] {
-    case GET -> Root => {
-      val state = session.getState
-      Ok(state)
-    }
-    case GET -> Root / "inc" => {
-      val state = session.inc
-      Ok(state)
-    }
-  }
+  private def httpRoutes(state: F[Counter[F]]): HttpRoutes[F] = HttpRoutes.of[F] {
 
-  val routes: HttpRoutes[F] = Router(
-    prefixPath -> httpRoutes
+    case GET -> Root / "inc" =>
+      state
+        .map { counter =>
+          Ok(counter.inc)
+        }.flatten
+    }
+
+  def routes(): HttpRoutes[F] = Router(
+    prefixPath -> httpRoutes(state)
   )
 
 }
