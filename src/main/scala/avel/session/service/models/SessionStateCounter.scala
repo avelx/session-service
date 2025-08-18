@@ -1,29 +1,29 @@
 package avel.session.service.models
 
 import avel.session.service.SessionState
-import cats.Functor
-import cats.effect.kernel.Ref
+import cats.effect.kernel.{Ref, Sync}
+import cats.implicits.{catsSyntaxApplyOps, toFlatMapOps}
 import cats.syntax.functor._
+import org.typelevel.log4cats.Logger
 
 trait SessionStateCounter[F[_]] {
   def get: F[SessionState]
-
   def inc: F[Unit]
 }
 
 object SessionStateCounterImpl {
 
-  def make[F[_] : Functor : Ref.Make]: F[SessionStateCounter[F]] = {
+  def make[F[_] : Sync : Ref.Make : Logger]: F[SessionStateCounter[F]] = {
     Ref.of[F, SessionState](SessionState(0)).map { ref =>
       new SessionStateCounter[F] {
-        def inc: F[Unit] = {
-          ref.update(st => { // Use same sessionState object
-            //            val res =
-            st.copy(counter = st.counter + 1)
-            //println(s"Current state: $res")
-            //            res
-          })
-        }
+
+        def inc: F[Unit] =
+         Logger[F].info("ATTEMPT:::INC") *>
+            Sync[F].delay(
+              ref.update(st => {
+                st.copy(counter = st.counter + 1)
+              })
+            ).flatMap(x => x)
 
         def get: F[SessionState] = ref.get
       }
