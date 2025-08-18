@@ -11,7 +11,7 @@ trait SessionStateCounter[F[_]] {
   def inc: F[Unit]
 }
 
-object CounterImpl {
+object SessionStateCounterImpl {
 
   def make[F[_] : Functor : Ref.Make]: F[SessionStateCounter[F]] = {
     Ref.of[F, SessionState](SessionState(0)).map { ref =>

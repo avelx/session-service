@@ -1,6 +1,6 @@
 package avel.session.service
 
-import avel.session.service.models.CounterImpl
+import avel.session.service.models.SessionStateCounterImpl
 import avel.session.service.services.MkHttpServer
 import cats.effect.{IO, IOApp}
 import org.typelevel.log4cats.SelfAwareStructuredLogger
@@ -11,8 +11,8 @@ object Main extends IOApp.Simple {
 
   override def run: IO[Unit] = {
       for {
-        counter <- CounterImpl.make[IO]
-        api = HttpApi.make[IO](counter)
+        stateCounter <- SessionStateCounterImpl.make[IO]
+        api = HttpApi.make[IO](stateCounter)
         httpServer = MkHttpServer[IO].newEmber(api.httpApp)
         runner <- httpServer.useForever
       } yield runner
