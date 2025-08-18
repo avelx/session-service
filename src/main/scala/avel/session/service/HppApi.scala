@@ -1,7 +1,7 @@
 package avel.session.service
 
 import avel.session.service.routes.SessionRoutes
-import avel.session.service.server.Services
+import avel.session.service.services.Services
 import cats.effect.Sync
 import org.http4s.server.Router
 import org.http4s.{HttpApp, HttpRoutes}

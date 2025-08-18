@@ -1,6 +1,5 @@
-package avel.session.service.server
+package avel.session.service.services
 
-import avel.session.service.session.{SessionService, SessionServiceImpl}
 import cats.effect.kernel.Sync
 
 object Services {

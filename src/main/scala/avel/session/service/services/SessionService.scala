@@ -1,9 +1,9 @@
-package avel.session.service.session
+package avel.session.service.services
 
 import avel.session.service.models.SessionState
-import cats.{Functor, Monad}
 import cats.effect.kernel.{Ref, Sync}
 import cats.syntax.all._
+import cats.{Functor, Monad}
 
 import scala.util.Random
 

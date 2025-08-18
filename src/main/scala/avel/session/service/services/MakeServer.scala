@@ -1,4 +1,4 @@
-package avel.session.service.server
+package avel.session.service.services
 
 import cats.effect.kernel.{Async, Resource}
 import com.comcast.ip4s.{Host, Port}

@@ -10,10 +10,7 @@ object models {
 
   final case class Session(sessionId: String) extends AnyVal
 
-  final case class SessionState private(id: UUID, counter : Int) {
-    def incLocal: SessionState = SessionState(counter = this.counter + 1)
-  }
-
+  final case class SessionState private(id: UUID, counter : Int)
 
   object Session {
     implicit val sessionEncoder: Encoder[Session] = new Encoder[Session] {
