@@ -12,25 +12,26 @@ object models {
 
   final case class SessionState private(id: UUID, counter : Int)
 
-  object Session {
-    implicit val sessionEncoder: Encoder[Session] = new Encoder[Session] {
-      final def apply(a: Session): Json = Json.obj(
-        ("sessionId", Json.fromString(a.sessionId.toString)),
-      )
-    }
-
-    implicit def sessionEntityEncoder[F[_]]: EntityEncoder[F, Session] =
-      jsonEncoderOf[F, Session]
-  }
+// TODO: re-enable when needed
+//  object Session {
+//    implicit val sessionEncoder: Encoder[Session] = new Encoder[Session] {
+//      final def apply(a: Session): Json = Json.obj(
+//        ("sessionId", Json.fromString(a.sessionId.toString)),
+//      )
+//    }
+//
+//    implicit def sessionEntityEncoder[F[_]]: EntityEncoder[F, Session] =
+//      jsonEncoderOf[F, Session]
+//  }
 
   object SessionState {
     def apply(counter: Int) : SessionState = {
       new SessionState(id = UUID.randomUUID(), counter = counter)
     }
 
-
     implicit val sessionStateEncoder: Encoder[SessionState] = new Encoder[SessionState] {
       final def apply(a: SessionState): Json = Json.obj(
+        ("guid", Json.fromString(a.id.toString)),
         ("state", Json.fromInt(a.counter)),
       )
     }
