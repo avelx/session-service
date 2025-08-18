@@ -9,14 +9,14 @@ import org.http4s.{HttpApp, HttpRoutes}
 object HttpApi {
   def make[F[_]: Sync](
                          services: Services[F],
-                         state: F[Counter[F]]
+                         state: Counter[F]
                        ): HttpApi[F] =
     new HttpApi[F](services, state) {}
 }
 
 sealed abstract class HttpApi[F[_]: Sync] private (
                                                      services: Services[F],
-                                                     state: F[Counter[F]]
+                                                     state: Counter[F]
                                                    ) {
 
   private val sessionRoute    = SessionRoutes[F](services.session, state).routes()
