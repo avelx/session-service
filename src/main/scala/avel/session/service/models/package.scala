@@ -7,22 +7,7 @@ object models {
   import org.http4s.EntityEncoder
   import org.http4s.circe._
 
-
-  final case class Session(sessionId: String) extends AnyVal
-
   final case class SessionState private(id: UUID, counter : Int)
-
-// TODO: re-enable when needed
-//  object Session {
-//    implicit val sessionEncoder: Encoder[Session] = new Encoder[Session] {
-//      final def apply(a: Session): Json = Json.obj(
-//        ("sessionId", Json.fromString(a.sessionId.toString)),
-//      )
-//    }
-//
-//    implicit def sessionEntityEncoder[F[_]]: EntityEncoder[F, Session] =
-//      jsonEncoderOf[F, Session]
-//  }
 
   object SessionState {
     def apply(counter: Int) : SessionState = {
