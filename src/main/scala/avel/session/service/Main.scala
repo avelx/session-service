@@ -13,8 +13,8 @@ object Main extends IOApp.Simple {
         counter <- CounterImpl.make[IO]
         api = HttpApi.make[IO](Services.make[IO](), counter)
         httpServer = MkHttpServer[IO].newEmber(api.httpApp)
-        r <- httpServer.useForever
-      } yield r
+        runner <- httpServer.useForever
+      } yield runner
   }
 
 }
