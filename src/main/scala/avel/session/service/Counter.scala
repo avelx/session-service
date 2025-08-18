@@ -6,9 +6,7 @@ import cats.syntax.functor._
 import cats.effect.kernel.Ref
 
 trait Counter[F[_]] {
-
   def get: F[SessionState]
-
   def inc: F[Unit]
 }
 
@@ -18,7 +16,12 @@ object CounterImpl {
     Ref.of[F, SessionState](SessionState(0)).map { ref =>
       new Counter[F] {
         def inc: F[Unit] = {
-          ref.update(st => SessionState(counter = st.counter + 1))
+          ref.update(st => { // Use same sessionState object
+//            val res =
+              st.copy(counter = st.counter + 1)
+            //println(s"Current state: $res")
+//            res
+          })
         }
         def get: F[SessionState] = ref.get
       }
