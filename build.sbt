@@ -17,8 +17,8 @@ lazy val root = (project in file("."))
       "org.http4s" %% "http4s-circe" % Http4sVersion,
       "org.http4s" %% "http4s-dsl" % Http4sVersion,
       "io.circe" %% "circe-generic" % CirceVersion,
-//      "org.scalameta" %% "munit" % MunitVersion % Test,
-//      "org.typelevel" %% "munit-cats-effect" % MunitCatsEffectVersion % Test,
+      "org.scalameta" %% "munit" % MunitVersion % Test,
+      "org.typelevel" %% "munit-cats-effect" % MunitCatsEffectVersion % Test,
 //      "ch.qos.logback" % "logback-classic" % LogbackVersion % Runtime,
       "org.typelevel" %% "log4cats-core"    % "2.7.1",  // Only if you want to Support Any Backend
       "org.typelevel" %% "log4cats-slf4j" % "2.7.1", // Direct Slf4j Support - Recommended
