@@ -10,4 +10,8 @@ TODO:
     ~~* Enhance logging: capture value while evaluating~~
 
 TODO: Other enhancements
-    * Add config and option to keep state in Redis
+    * Add config in the FP way
+    * Add Redis service docker definition
+    * Add Redis service and integrate it as an APP resource
+
+        
