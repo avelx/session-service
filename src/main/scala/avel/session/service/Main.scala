@@ -1,7 +1,6 @@
 package avel.session.service
 
-import avel.session.service.models.SessionStateCounterService
-import avel.session.service.services.MkHttpServer
+import avel.session.service.services.SessionStateCounterService
 import cats.effect.{IO, IOApp}
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger

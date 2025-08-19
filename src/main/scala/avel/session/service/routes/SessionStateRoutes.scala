@@ -1,6 +1,6 @@
 package avel.session.service.routes
 
-import avel.session.service.models.SessionStateCounterService
+import avel.session.service.services.SessionStateCounterService
 import cats.effect.kernel.Sync
 import org.http4s.HttpRoutes
 import org.http4s.circe.CirceEntityCodec.circeEntityEncoder

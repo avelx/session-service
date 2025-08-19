@@ -1,4 +1,4 @@
-package avel.session.service.models
+package avel.session.service.services
 
 import avel.session.service.SessionState
 import cats.effect.kernel.{Ref, Sync}

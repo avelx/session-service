@@ -1,7 +1,7 @@
 package avel.session.service
 
-import avel.session.service.models.SessionStateCounterService
 import avel.session.service.routes.SessionStateRoutes
+import avel.session.service.services.SessionStateCounterService
 import cats.effect.IO
 import munit.CatsEffectSuite
 import org.http4s._
