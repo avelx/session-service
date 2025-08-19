@@ -27,7 +27,12 @@ object SessionStateCounter {
                 }
 
 
-        def get: F[SessionState] = ref.get
+        def get: F[SessionState] = {
+          ref.get.flatMap{v =>
+            Logger[F].debug(s"SS_CNT::GET::VALUE->$v")
+          } *>
+          ref.get
+        }
       }
     }
   }

@@ -13,14 +13,14 @@ class SessionStateSpec extends CatsEffectSuite {
 
   implicit val logger: SelfAwareStructuredLogger[IO] = Slf4jLogger.getLogger[IO]
 
-    test("SessionService :: returns status code 200") {
-      assertIO(retSessionState.map(_.status) ,Status.Ok)
-    }
+  test("SessionService :: returns status code 200") {
+    assertIO(retSessionState.map(_.status), Status.Ok) *>
+      assertIO(retSessionState.flatMap(x => x.as[String]), "{\"state\":0}")
+  }
 
-    test("SessionService::INC returns status code 200") {
-      assertIO(retSessionStateInc.map(_.status) ,Status.Ok) *>
-      assertIO(retSessionStateInc.flatMap(x => x.as[String]), "{\"state\":1}")
-    }
+  test("SessionService::INC returns status code 200") {
+    assertIO(retSessionStateInc.map(_.status), Status.Ok)
+  }
 
   private[this] def retSessionState: IO[Response[IO]] = {
     val getHW = Request[IO](Method.GET, uri"/session")

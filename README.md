@@ -7,5 +7,7 @@ TODO:
   ~~* Fix issue compile time warnings~~
   ~~* Add logging~~
     ~~* Add Tests~~
-    * Enhance logging: capture value while evaluating
+    ~~* Enhance logging: capture value while evaluating~~
+
+TODO: Other enhancements
     * Add config and option to keep state in Redis
