@@ -18,8 +18,8 @@ class SessionStateSpec extends CatsEffectSuite {
     }
 
     test("SessionService::INC returns status code 200") {
-      assertIO(retSessionStateInc.map(_.status) ,Status.Ok)
-      //TODO: fix values for the test
+      assertIO(retSessionStateInc.map(_.status) ,Status.Ok) *>
+      assertIO(retSessionStateInc.flatMap(x => x.as[String]), "{\"state\":1}")
     }
 
   private[this] def retSessionState: IO[Response[IO]] = {
