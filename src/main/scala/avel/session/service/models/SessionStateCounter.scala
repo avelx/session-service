@@ -18,12 +18,14 @@ object SessionStateCounter {
       new SessionStateCounter[F] {
 
         def inc: F[Unit] =
-         Logger[F].info("ATTEMPT:::INC") *>
-            Sync[F].delay(
+
               ref.update(st => {
                 st.copy(counter = st.counter + 1)
-              })
-            ).flatMap(x => x)
+              }) *> // This is a way to extract value out of F[_] and log it
+                 ref.get.flatMap{v =>
+                    Logger[F].debug(s"SS_CNT::INC::VALUE->$v")
+                }
+
 
         def get: F[SessionState] = ref.get
       }

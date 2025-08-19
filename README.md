@@ -6,6 +6,6 @@ State preserved in-Memory using Ref data structure: https://typelevel.org/cats-e
 TODO:
   ~~* Fix issue compile time warnings~~
   ~~* Add logging~~
-    * Add Tests
+    ~~* Add Tests~~
     * Enhance logging: capture value while evaluating
     * Add config and option to keep state in Redis
