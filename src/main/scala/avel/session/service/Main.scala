@@ -1,6 +1,6 @@
 package avel.session.service
 
-import avel.session.service.models.SessionStateCounter
+import avel.session.service.models.SessionStateCounterService
 import avel.session.service.services.MkHttpServer
 import cats.effect.{IO, IOApp}
 import org.typelevel.log4cats.SelfAwareStructuredLogger
@@ -13,7 +13,7 @@ object Main extends IOApp.Simple {
   // TODO: this EF's joining still need to be re-worked / to be aligned with standard???
   override def run: IO[Unit] = {
       for {
-        stateCounter <- SessionStateCounter.impl[IO]
+        stateCounter <- SessionStateCounterService.impl[IO]
         api = HttpApi.make[IO](stateCounter)
         httpServer = MkHttpServer[IO].newEmber(api.httpApp)
         runner <- httpServer.useForever

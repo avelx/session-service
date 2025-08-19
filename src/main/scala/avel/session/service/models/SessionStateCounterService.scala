@@ -6,16 +6,16 @@ import cats.implicits.{catsSyntaxApplyOps, toFlatMapOps}
 import cats.syntax.functor._
 import org.typelevel.log4cats.Logger
 
-trait SessionStateCounter[F[_]] {
+trait SessionStateCounterService[F[_]] {
   def get: F[SessionState]
   def inc: F[Unit]
 }
 
-object SessionStateCounter {
+object SessionStateCounterService {
 
-  def impl[F[_] : Sync : Ref.Make : Logger]: F[SessionStateCounter[F]] = {
+  def impl[F[_] : Sync : Ref.Make : Logger]: F[SessionStateCounterService[F]] = {
     Ref.of[F, SessionState](SessionState(0)).map { ref =>
-      new SessionStateCounter[F] {
+      new SessionStateCounterService[F] {
 
         def inc: F[Unit] =
 

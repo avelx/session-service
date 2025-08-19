@@ -1,6 +1,6 @@
 package avel.session.service
 
-import avel.session.service.models.SessionStateCounter
+import avel.session.service.models.SessionStateCounterService
 import avel.session.service.routes.SessionStateRoutes
 import cats.effect.IO
 import munit.CatsEffectSuite
@@ -25,16 +25,16 @@ class SessionStateSpec extends CatsEffectSuite {
   private[this] def retSessionState: IO[Response[IO]] = {
     val getHW = Request[IO](Method.GET, uri"/session")
     for {
-      state <- SessionStateCounter.impl[IO]
+      state <- SessionStateCounterService.impl[IO]
       request <- SessionStateRoutes[IO](state).routes().orNotFound(getHW)
     } yield request
   }
 
   private[this] def retSessionStateInc: IO[Response[IO]] = {
-    val getHW = Request[IO](Method.GET, uri"/session/inc")
+    val incStateRequest: Request[IO] = Request[IO](Method.GET, uri"/session/inc")
     for {
-      state <- SessionStateCounter.impl[IO]
-      request <- SessionStateRoutes[IO](state).routes().orNotFound(getHW)
+      state <- SessionStateCounterService.impl[IO]
+      request <- SessionStateRoutes[IO](state).routes().orNotFound(incStateRequest)
     } yield request
   }
 
