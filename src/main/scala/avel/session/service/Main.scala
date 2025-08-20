@@ -16,7 +16,7 @@ object Main extends IOApp.Simple {
       Logger[IO].info(s"Loaded config $config") >>
       SessionStateCounterService.impl[IO].flatMap { sessionService =>
         val api = HttpApi.make[IO](sessionService)
-        val httpServer = MkHttpServer[IO].newEmber(api.httpApp, config.get)
+        val httpServer = MkHttpServer[IO].newEmber(api.httpApp, config)
         httpServer.useForever
       }
     }

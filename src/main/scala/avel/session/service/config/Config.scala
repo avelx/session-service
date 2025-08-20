@@ -7,8 +7,13 @@ import pureconfig.generic.auto._
 
 object Config {
 
-  def load[F[_] : Sync]: F[Option[ServiceConfig]] = {
-    ConfigSource.default.load[ServiceConfig].toOption.pure[F]
+  def load[F[_] : Sync]: F[ServiceConfig] = {
+    ConfigSource
+      .default
+      .load[ServiceConfig]
+      .toOption.getOrElse(throw new Error("ServiceConfig is missing"))
+      .pure[F]
+
   }
 
 }
