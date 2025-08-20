@@ -14,10 +14,15 @@ final case class ErrorRoutes[F[_] :Sync: Logger]() extends Http4sDsl[F] {
 
   val errorRoute: HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root / "suppression" =>
-      Logger[F].error("Exception raised ...") *>
+      Logger[F].error("Exception raised and override") *>
         Sync[F].delay(throw new Exception("Hey don't swallow me") )
           .attempt *>
       Ok("Ok")
+
+    case GET -> Root / "swallow" =>
+      Logger[F].error("Exception will be swallowed") *>
+        Sync[F].delay(throw new Exception("Hey don't swallow me") ) *>
+        Ok("Ok")
   }
 
   def routes(): HttpRoutes[F] = Router(

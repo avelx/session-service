@@ -10,6 +10,14 @@ TODO:
     ~~* Enhance logging: capture value while evaluating~~
     * Implement simple queue: item in(String) and item out
 
+Play with:
+    ** Auth
+    ** Middleware
+    ** Streaming
+    ** Integration Testing 
+    ** More complex CE3.x data structures like: 
+            [ Clock | Timer | Semaphore | MVar2 | Deferred | ] 
+
 TODO: Other enhancements
     * Add config in the FP way
     * Add Redis service docker definition
