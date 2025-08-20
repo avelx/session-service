@@ -26,7 +26,6 @@ object SessionStateCounterService {
                     Logger[F].debug(s"SS_CNT::INC::VALUE->$v")
                 }
 
-
         def get: F[SessionState] = {
           ref.get.flatMap{v =>
             Logger[F].debug(s"SS_CNT::GET::VALUE->$v")
