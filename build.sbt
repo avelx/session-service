@@ -13,20 +13,14 @@ lazy val root = (project in file("."))
     scalaVersion := "2.13.16",
     libraryDependencies ++= Seq(
       "org.http4s" %% "http4s-ember-server" % Http4sVersion,
-//      "org.http4s" %% "http4s-ember-client" % Http4sVersion,
       "org.http4s" %% "http4s-circe" % Http4sVersion,
       "org.http4s" %% "http4s-dsl" % Http4sVersion,
       "io.circe" %% "circe-generic" % CirceVersion,
       "org.scalameta" %% "munit" % MunitVersion % Test,
       "org.typelevel" %% "munit-cats-effect" % MunitCatsEffectVersion % Test,
-//      "ch.qos.logback" % "logback-classic" % LogbackVersion % Runtime,
       "org.typelevel" %% "log4cats-core"    % "2.7.1",  // Only if you want to Support Any Backend
       "org.typelevel" %% "log4cats-slf4j" % "2.7.1", // Direct Slf4j Support - Recommended
       "ch.qos.logback" % "logback-classic" % "1.2.11",
-
-//      // Ciris
-//      "is.cir" %% "ciris" % "3.10.0",
-//      "is.cir" %% "ciris-circe-yaml" % "3.10.0",
       "com.github.pureconfig" %% "pureconfig" % "0.17.9"
     ),
     addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.13.3" cross CrossVersion.full),
