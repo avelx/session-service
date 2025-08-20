@@ -8,6 +8,7 @@ TODO:
   ~~* Add logging~~
     ~~* Add Tests~~
     ~~* Enhance logging: capture value while evaluating~~
+    * Implement simple queue: item in(String) and item out
 
 TODO: Other enhancements
     * Add config in the FP way
