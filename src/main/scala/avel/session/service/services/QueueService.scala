@@ -14,7 +14,7 @@ trait QueueService[F[_]] {
 object QueueService {
   private val queueSize : Int = 10
 
-  def imp[F[_]: Async: Logger] : F[QueueService[F]] = {
+  def impl[F[_]: Async: Logger] : F[QueueService[F]] = {
 
     Queue.bounded[F, String](queueSize).map { queue =>
       new QueueService[F] {
