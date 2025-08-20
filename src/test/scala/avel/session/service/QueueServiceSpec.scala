@@ -27,7 +27,7 @@ class QueueServiceSpec extends CatsEffectSuite {
 
   test("QueueService::pull returns status code 200") {
       assertIO(retQueueServiceDobuleRequest(
-        uri"/queue/push/itemA", uri"/queue/push/secondItem" , uri"/queue/pull")
+        uri"/queue/push/" / "itemA", uri"/queue/push/secondItem" , uri"/queue/pull")
         .flatMap(x => x.as[Option[String]]), Some("secondItem"))
   }
 

@@ -17,12 +17,12 @@ object Main extends IOApp.Simple {
       Logger[IO].info(s"Loaded config $config") >>
         AppResources.make[IO](config).use { _ =>
           SessionStateCounterService.impl[IO].flatMap { sessionService =>
-                    QueueService.impl[IO].flatMap { queueService =>
-                      val api = HttpApi.make[IO](sessionService, queueService)
-                      val httpServer = MkHttpServer[IO].newEmber(api.httpApp, config)
-                      httpServer.useForever
-                    }
-                  }
+            QueueService.impl[IO].flatMap { queueService =>
+              val api = HttpApi.make[IO](sessionService, queueService)
+              val httpServer = MkHttpServer[IO].newEmber(api.httpApp, config)
+              httpServer.useForever
+            }
+          }
         }
     }
   }
