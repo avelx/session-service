@@ -22,9 +22,12 @@ lazy val root = (project in file("."))
 //      "ch.qos.logback" % "logback-classic" % LogbackVersion % Runtime,
       "org.typelevel" %% "log4cats-core"    % "2.7.1",  // Only if you want to Support Any Backend
       "org.typelevel" %% "log4cats-slf4j" % "2.7.1", // Direct Slf4j Support - Recommended
-"ch.qos.logback" % "logback-classic" % "1.2.11"
+      "ch.qos.logback" % "logback-classic" % "1.2.11",
 
-
+//      // Ciris
+//      "is.cir" %% "ciris" % "3.10.0",
+//      "is.cir" %% "ciris-circe-yaml" % "3.10.0",
+      "com.github.pureconfig" %% "pureconfig" % "0.17.9"
     ),
     addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.13.3" cross CrossVersion.full),
     addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"),
