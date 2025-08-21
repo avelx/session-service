@@ -11,11 +11,13 @@ TODO:
     * Implement simple queue: item in(String) and item out
 
 Play with:
+    ** Design use session service funcs using MapRef
+        + add TTL logic | background logic   
     ** Implement Graceful shutdown
     ** Auth
     ** Middleware
     ** Streaming
-    ** Integration Testing 
+    ** Integration Testing
     ** More complex CE3.x data structures like: 
             [ Clock | Timer | Semaphore | MVar2 | Deferred | ] 
 

@@ -2,7 +2,8 @@ package avel.session.service
 
 import avel.session.service.config.Config
 import avel.session.service.resources.AppResources
-import avel.session.service.services.{QueueService, SessionStateCounterService}
+import avel.session.service.server.{HttpApi, MkHttpServer}
+import avel.session.service.services.{CounterService, QueueService}
 import cats.effect.{IO, IOApp}
 import dev.profunktor.redis4cats.effect.Log.NoOp.instance
 import org.typelevel.log4cats.slf4j.Slf4jLogger
@@ -16,11 +17,11 @@ object Main extends IOApp.Simple {
     Config.load[IO].flatMap { config =>
       Logger[IO].info(s"Loaded config $config") >>
         AppResources.make[IO](config).use { _ =>
-          SessionStateCounterService.impl[IO].flatMap { sessionService =>
+          CounterService.impl[IO].flatMap { sessionService =>
             QueueService.impl[IO].flatMap { queueService =>
               val api = HttpApi.make[IO](sessionService, queueService)
               val httpServer = MkHttpServer[IO].newEmber(api.httpApp, config)
-              httpServer.useForever
+              httpServer.use(_ => IO.never)
             }
           }
         }

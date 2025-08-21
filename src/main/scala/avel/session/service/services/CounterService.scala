@@ -1,21 +1,21 @@
 package avel.session.service.services
 
-import avel.session.service.SessionState
+import avel.session.service.CounterState
 import cats.effect.kernel.{Ref, Sync}
 import cats.implicits.{catsSyntaxApplyOps, toFlatMapOps}
 import cats.syntax.functor._
 import org.typelevel.log4cats.Logger
 
-trait SessionStateCounterService[F[_]] {
-  def get: F[SessionState]
+trait CounterService[F[_]] {
+  def get: F[CounterState]
   def inc: F[Unit]
 }
 
-object SessionStateCounterService {
+object CounterService {
 
-  def impl[F[_] : Sync : Ref.Make : Logger]: F[SessionStateCounterService[F]] = {
-    Ref.of[F, SessionState](SessionState(0)).map { ref =>
-      new SessionStateCounterService[F] {
+  def impl[F[_] : Sync : Ref.Make : Logger]: F[CounterService[F]] = {
+    Ref.of[F, CounterState](CounterState(0)).map { ref =>
+      new CounterService[F] {
 
         def inc: F[Unit] =
 
@@ -26,7 +26,7 @@ object SessionStateCounterService {
                     Logger[F].debug(s"SS_CNT::INC::VALUE->$v")
                 }
 
-        def get: F[SessionState] = {
+        def get: F[CounterState] = {
           ref.get.flatMap{v =>
             Logger[F].debug(s"SS_CNT::GET::VALUE->$v")
           } *>

@@ -1,4 +1,4 @@
-package avel.session.service
+package avel.session.service.server
 
 import avel.session.service.config.ServiceConfig
 import cats.effect.kernel.{Async, Resource}
@@ -30,5 +30,6 @@ object MkHttpServer {
           .withHttpApp(httpApp)
           .build
           .evalTap(showEmberBanner[F])
+
     }
 }

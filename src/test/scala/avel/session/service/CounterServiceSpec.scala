@@ -1,7 +1,7 @@
 package avel.session.service
 
-import avel.session.service.routes.SessionStateRoutes
-import avel.session.service.services.SessionStateCounterService
+import avel.session.service.routes.CounterStateRoutes
+import avel.session.service.services.CounterService
 import cats.effect.IO
 import munit.CatsEffectSuite
 import org.http4s._
@@ -9,7 +9,7 @@ import org.http4s.implicits.http4sLiteralsSyntax
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-class SessionStateServiceSpec extends CatsEffectSuite {
+class CounterServiceSpec extends CatsEffectSuite {
 
   implicit val logger: SelfAwareStructuredLogger[IO] = Slf4jLogger.getLogger[IO]
 
@@ -25,16 +25,16 @@ class SessionStateServiceSpec extends CatsEffectSuite {
   private[this] def retSessionState: IO[Response[IO]] = {
     val getHW = Request[IO](Method.GET, uri"/session")
     for {
-      stateService <- SessionStateCounterService.impl[IO]
-      response <- SessionStateRoutes[IO](stateService).routes().orNotFound(getHW)
+      stateService <- CounterService.impl[IO]
+      response <- CounterStateRoutes[IO](stateService).routes().orNotFound(getHW)
     } yield response
   }
 
   private[this] def retSessionStateInc: IO[Response[IO]] = {
     val incStateRequest: Request[IO] = Request[IO](Method.GET, uri"/session/inc")
     for {
-      stateService <- SessionStateCounterService.impl[IO]
-      response <- SessionStateRoutes[IO](stateService).routes().orNotFound(incStateRequest)
+      stateService <- CounterService.impl[IO]
+      response <- CounterStateRoutes[IO](stateService).routes().orNotFound(incStateRequest)
     } yield response
   }
 
