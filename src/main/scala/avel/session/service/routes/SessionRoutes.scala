@@ -23,7 +23,7 @@ final case class SessionRoutes[F[_]: Async : Logger](
         val res = sessionService
           .create( UserSessionData(sessionId = sessionId,
             tag = "SomeData",
-            ticks = 1000L))
+            ticks = 50L))
         Ok(res)
 
       case GET -> Root / "get" / sessionId =>
