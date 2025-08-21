@@ -17,9 +17,9 @@ final case class UserSessionData private (
                                   tag: String
                                 ) {
   def tick: Option[UserSessionData] = {
-    val ticksElapsed = Instant.now().toEpochMilli - this.creationTick
+    val ticksElapsed = Instant.now().getEpochSecond - this.creationTick
     if (this.ticks - ticksElapsed > 0)
-      Some(this.copy(ticks = this.ticks - ticksElapsed))
+      Some(this.copy(ticks = this.ticks - ticksElapsed, creationTick = Instant.now().getEpochSecond))
     else
       None
   }
@@ -30,8 +30,8 @@ object UserSessionData {
 
   def apply(sessionId: String, ticks: Long, tag: String) = {
     new UserSessionData(sessionId,
-      creationTick = Instant.now().,
-      ticks = ticks * 1000,
+      creationTick = Instant.now().getEpochSecond,
+      ticks = ticks,
       tag = tag)
   }
 
@@ -40,7 +40,7 @@ object UserSessionData {
   implicit val sessionStateEncoder: Encoder[UserSessionData] = new Encoder[UserSessionData] {
     final def apply(a: UserSessionData): Json = Json.obj(
       ("sessionId", Json.fromString(a.sessionId)),
-      ("ticks", Json.fromLong(a.ticks)),
+      ("ttl", Json.fromLong(a.ticks)),
       ("tag", Json.fromString(a.tag)),
     )
   }
