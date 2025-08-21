@@ -12,7 +12,7 @@ final case class CounterStateRoutes[F[_]: Sync ](
                                               state: CounterService[F]
                                          ) extends Http4sDsl[F] {
 
-  private[routes] val prefixPath = "/session"
+  private[routes] val prefixPath = "/counter"
 
   private def httpRoutes(state: CounterService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
 
