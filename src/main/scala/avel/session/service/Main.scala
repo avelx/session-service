@@ -9,10 +9,6 @@ import dev.profunktor.redis4cats.effect.Log.NoOp.instance
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 
-import java.util.concurrent.Executors
-
-import scala.concurrent.ExecutionContext
-
 
 
 object Main extends IOApp.Simple {
