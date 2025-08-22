@@ -12,7 +12,7 @@ import scala.concurrent.duration.DurationInt
 trait SessionService[F[_]] {
   def create(session: UserSessionData) : F[Unit]
   def getById(sessionId: String): F[Option[UserSessionData]]
-  def tick: F[Unit]
+  def cleanUp: F[Unit]
 }
 
 object SessionService {
@@ -31,7 +31,11 @@ object SessionService {
             mapRef(sessionId).get
           }
 
-          override def tick: F[Unit] = {
+          // Clean up not expired sessions
+          /*
+            TODO: store sessionId's in kind of the Queue and use these values for expiry checks
+           */
+          override def cleanUp: F[Unit] = {
             Temporal[F].delay(10.second) *>
               Logger[F].info("Ticks")
           }
