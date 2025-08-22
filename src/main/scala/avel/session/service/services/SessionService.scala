@@ -37,7 +37,7 @@ object SessionService {
         new SessionService[F] {
 
           override def create(session: UserSessionData): F[Unit] = {
-          // Protective logic around session creation
+            // Protective logic around session creation
             getById(session.sessionId).map(_.isDefined).ifM(
               Logger[F].info(s"Session exists: ${session.sessionId}"),
               queue.offer(session.sessionId) *>
@@ -55,18 +55,17 @@ object SessionService {
 
           // Clean up expired sessions
           override def cleanUp: F[Unit] = {
-            Temporal[F].delay(10.second) *>
-              Sync[F].delay(
-                queue.tryTake.flatMap { sessionId =>
-                  (sessionId.pure[F]).map(_.isDefined).ifM(
-                    getById(sessionId.get).map(_.isEmpty).ifM(
-                      Logger[F].info(s"Expired: $sessionId"),
-                      Logger[F].info(s"Still alive: $sessionId") *>
-                        queue.tryOffer(sessionId.getOrElse("")).void
-                    ),
-                    Logger[F].info(s"No session with id: $sessionId")
-                  )
-                }).flatten >> // Show sessions total
+            Sync[F].delay(
+              queue.tryTake.flatMap { sessionId =>
+                (sessionId.pure[F]).map(_.isDefined).ifM(
+                  getById(sessionId.get).map(_.isEmpty).ifM(
+                    Logger[F].info(s"Expired: $sessionId"),
+                    Logger[F].info(s"Still alive: $sessionId") *>
+                      queue.tryOffer(sessionId.getOrElse("")).void
+                  ),
+                  Logger[F].info(s"No session with id: $sessionId")
+                )
+              }).flatten >> // Show sessions total
               queue.size.flatMap(size =>
                 Logger[F].debug(s"CleanUp: sessions::Total: ${size}"))
           }
