@@ -11,8 +11,8 @@ TODO:
     * Implement simple queue: item in(String) and item out
 
 Play with:
-    ** Design use session service funcs using MapRef
-        + add TTL logic | background logic   
+    ~~** Design use session service funcs using MapRef
+        + add TTL logic | background logic~~   
     ** Implement Graceful shutdown
     ** Auth
     ** Middleware
