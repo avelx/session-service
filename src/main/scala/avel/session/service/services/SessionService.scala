@@ -1,12 +1,10 @@
 package avel.session.service.services
 
 import avel.session.service.models.UserSessionData
-import cats.effect.kernel.{Async, Sync, Temporal}
+import cats.effect.kernel.{Async, Sync}
 import cats.effect.std.{MapRef, Queue}
 import cats.implicits.{catsSyntaxApplicativeId, catsSyntaxApplyOps, catsSyntaxFlatMapOps, catsSyntaxIfM, toFlatMapOps, toFunctorOps}
 import org.typelevel.log4cats.Logger
-
-import scala.concurrent.duration.DurationInt
 
 
 trait SessionService[F[_]] {
