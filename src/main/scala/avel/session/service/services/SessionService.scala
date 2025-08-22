@@ -29,8 +29,13 @@ object SessionService {
         new SessionService[F] {
 
           override def create(session: UserSessionData): F[Unit] = {
-            queue.offer(session.sessionId) *>
-              mapRef(session.sessionId).update(_ => Some(session))
+          // Protective logic around session creation
+            getById(session.sessionId).map(_.isDefined).ifM(
+              Logger[F].info(s"Session exists: ${session.sessionId}"),
+              queue.offer(session.sessionId) *>
+                mapRef(session.sessionId).update(_ => Some(session))
+            )
+
           }
 
           override def getById(sessionId: String): F[Option[UserSessionData]] = {
