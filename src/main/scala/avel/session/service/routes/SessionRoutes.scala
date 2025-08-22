@@ -33,6 +33,9 @@ final case class SessionRoutes[F[_]: Async : Logger](
             val s = sessionService.getById(sessionId)
             Ok(s)
           }.flatten
+      case GET -> Root / "total"  =>
+        val sessionsCount = sessionService.total
+        Ok(sessionsCount)
     }
 
     def routes(): HttpRoutes[F] = Router(

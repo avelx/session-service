@@ -15,6 +15,8 @@ trait SessionService[F[_]] {
   def getById(sessionId: String): F[Option[UserSessionData]]
 
   def cleanUp: F[Unit]
+
+  def total: F[Int]
 }
 
 object SessionService {
@@ -52,9 +54,13 @@ object SessionService {
                   )
                 }).flatten >>
               queue.size.flatMap(size =>
-                Logger[F].info(s"CleanUp: sessions::Total: ${size}"))
+                Logger[F].debug(s"CleanUp: sessions::Total: ${size}"))
           }
 
+          override def total: F[Int] = {
+            queue.size.flatMap(size =>
+              Logger[F].info(s"Total sessions: ${size}")) *> queue.size
+          }
         }
       }
     }.flatten
