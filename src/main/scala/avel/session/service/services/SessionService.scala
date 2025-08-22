@@ -19,6 +19,14 @@ trait SessionService[F[_]] {
   def total: F[Int]
 }
 
+/*
+    SessionService build upon two concurrency primitives
+    bounded Queue and MapRef with fixed number of shards
+    cleanUp function need to be triggered externally to clean up expired sessions
+    otherwise session would expire on Get request
+    also service provided number of currently live sessions
+    This is alpha version of this service, more changes expected.
+ */
 object SessionService {
   private val shardCound: Int = 5
   private val queueSize: Int = 100
