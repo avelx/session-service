@@ -45,7 +45,7 @@ object SessionService {
             ) *> mapRef(sessionId).get
           }
 
-          // Clean up not expired sessions
+          // Clean up expired sessions
           override def cleanUp: F[Unit] = {
             Temporal[F].delay(10.second) *>
               Sync[F].delay(
