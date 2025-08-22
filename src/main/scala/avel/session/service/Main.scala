@@ -11,21 +11,9 @@ import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 
 
 
-object Main extends IOApp.Simple {
+object Main extends IOApp.Simple with BackgroundFiber {
 
   implicit val logger: SelfAwareStructuredLogger[IO] = Slf4jLogger.getLogger[IO]
-
-  import scala.concurrent.duration.DurationInt
-
-  private def backgroundProcess(sessionService: SessionService[IO]): IO[Unit] = {
-    for {
-      _ <- IO.sleep(10.second)
-      _ <- IO.cede
-      _ <- sessionService.cleanUp
-      _ <- IO.cede
-      _ <- backgroundProcess((sessionService))
-    } yield ()
-  }
 
   override def run: IO[Unit] = {
     Config.load[IO].flatMap { config =>
