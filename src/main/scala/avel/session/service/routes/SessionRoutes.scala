@@ -17,6 +17,7 @@ final case class SessionRoutes[F[_]: Async : Logger](
 
     private[routes] val prefixPath = "/session"
 
+
     private def httpRoutes(sessionService: SessionService[F]): HttpRoutes[F] = HttpRoutes.of[F] {
 
       case GET -> Root / "create" / sessionId =>

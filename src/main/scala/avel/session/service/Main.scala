@@ -9,10 +9,19 @@ import dev.profunktor.redis4cats.effect.Log.NoOp.instance
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import org.typelevel.log4cats.{Logger, SelfAwareStructuredLogger}
 
+import scala.concurrent.duration.DurationInt
+
 object Main extends IOApp.Simple {
 
   implicit val logger: SelfAwareStructuredLogger[IO] = Slf4jLogger.getLogger[IO]
 
+  private def backgroundProcess(sessionService: SessionService[IO]): IO[Unit] = {
+    for {
+      _ <-IO.sleep(10.second)
+      _ <- sessionService.tick
+      _ <- backgroundProcess((sessionService))
+    } yield ()
+  }
   override def run: IO[Unit] = {
     Config.load[IO].flatMap { config =>
       Logger[IO].info(s"Loaded config $config") >>
@@ -22,7 +31,8 @@ object Main extends IOApp.Simple {
               QueueService.impl[IO].flatMap { queueService =>
                 val api = HttpApi.make[IO](counterService, queueService, sessionService)
                 val httpServer = MkHttpServer[IO].newEmber(api.httpApp, config)
-                httpServer.use(_ => IO.never)
+                backgroundProcess(sessionService) *>
+                  httpServer.use(_ => IO.never)
               }
             }
           }
