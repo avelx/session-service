@@ -46,13 +46,13 @@ object SessionService {
                 queue.tryTake.flatMap { sessionId =>
                   (sessionId.pure[F]).map(_.isDefined).ifM(
                     getById(sessionId.get).map(_.isEmpty).ifM(
-                      Logger[F].info(s"Sessions: drop: $sessionId"),
-                      Logger[F].info(s"Sessions: still alive: $sessionId") *>
+                      Logger[F].info(s"Expired: $sessionId"),
+                      Logger[F].info(s"Still alive: $sessionId") *>
                         queue.tryOffer(sessionId.getOrElse("")).void
                     ),
-                    Logger[F].info("Sessions: None")
+                    Logger[F].info(s"No session with id: $sessionId")
                   )
-                }).flatten >>
+                }).flatten >> // Show sessions total
               queue.size.flatMap(size =>
                 Logger[F].debug(s"CleanUp: sessions::Total: ${size}"))
           }
