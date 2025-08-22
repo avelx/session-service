@@ -33,7 +33,8 @@ object SessionService {
             getById(session.sessionId).map(_.isDefined).ifM(
               Logger[F].info(s"Session exists: ${session.sessionId}"),
               queue.offer(session.sessionId) *>
-                mapRef(session.sessionId).update(_ => Some(session))
+                mapRef(session.sessionId).update(_ => Some(session)) *>
+                Logger[F].info(s"Session created: ${session.sessionId}")
             )
 
           }
